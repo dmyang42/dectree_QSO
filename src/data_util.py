@@ -19,13 +19,16 @@ def load_data(filename):
             lines = f.readlines()
             data, label = [], []
             feature = lines[0].split()
-            feature.remove('MiQSO')
+            feature.remove('MiQSO') # MiQSO相当于label, 从feature中移除
             for line in lines[1:]:
                 line = line.split()
                 line = line[1:]
                 try:
                     line = list(map(eval, line))
                 except NameError:
+                    # 存在部分数据为inf
+                    # 主要是JAVELIN拟合出的tau或sigma
+                    # 这里的处理是直接扔掉该源
                     print("inf in " + filename)
                 else:
                     label.append(line.pop(7))
@@ -34,10 +37,12 @@ def load_data(filename):
             label = norm_label(label)
         return data, label
     except FileNotFoundError:
+        # 存在部分块不存在的情况
         print("Missing part: " + filename)
         return [], []
     
 def merge_data(index_list):
+    # 合并多个数据块
     merged_data, merged_label = [], []
     for i in index_list:
         filename = "./train/test_sample_data_" + str(i)

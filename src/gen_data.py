@@ -58,10 +58,10 @@ def write_data(train_data_set):
             print >> output_file, "%-20.3f" %(float(feature)),
         print >> output_file 
 
-# 多进程 - 4
+# 多进程 - 8
 # start = time.clock()
 start = time.time()
-pool = MyPool(4)
+pool = MyPool(8)
 
 train_data_set = []
 with open('./data/test') as f:
@@ -104,7 +104,7 @@ with open('./data/test') as f:
     #         sigma[1], sigma[2], sigma[3], sigma[4]))
     
     # 下面是多进程处理上面的for循环
-    outputs = pool.map(thread_javelin, lines[1:])
+outputs = pool.map(thread_javelin, lines[1:])
 
 # print(outputs)
 write_data(outputs)

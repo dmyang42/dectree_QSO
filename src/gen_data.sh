@@ -1,5 +1,5 @@
 #!/bin/zsh
-for (( integer=382; interger <= 675; integer++))
+for (( integer=382; integer <= 675; integer++))
 do
     start_point=`expr $integer \* 100`
     end_point=`expr $integer \* 100 + 100`

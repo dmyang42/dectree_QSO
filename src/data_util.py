@@ -6,6 +6,7 @@ def get_feature(filename):
         with open(filename) as f:
             lines = f.readlines()
             feature = lines[0].split()
+            feature.remove('ID')
             feature.remove('MiQSO') # MiQSO相当于label, 从feature中移除
         return feature
     except FileNotFoundError:

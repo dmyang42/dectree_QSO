@@ -4,7 +4,7 @@ import multiprocessing
 # We must import this explicitly, it is not imported by the top-level
 # multiprocessing module.
 import multiprocessing.pool
-from run_javelin import javelin_fit
+from data_javelin import javelin_fit
 import time
 
 #

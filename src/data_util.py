@@ -1,5 +1,17 @@
 from sklearn import preprocessing
 from sklearn.feature_extraction import DictVectorizer
+import random
+
+def i_band_filter():
+    # 去除i > 19.00的非QSO源
+    # 大概有一万多个
+    remove_ID = []
+    with open('./i_filter') as f:
+        lines = f.readlines()
+        for line in lines:
+            line = line.split()
+            remove_ID.append(int(line[0]))
+    return remove_ID
 
 def get_feature(filename):
     try:
@@ -30,6 +42,7 @@ def norm_label(label):
 def load_data(filename):
     # 导入单个数据块数据,保存为矩阵格式输出
     # label代表是否是QSO
+    remove_ID = i_band_filter()
     try:
         with open(filename) as f:
             lines = f.readlines()
@@ -38,34 +51,56 @@ def load_data(filename):
             feature.remove('MiQSO') # MiQSO相当于label, 从feature中移除
             for line in lines[1:]:
                 line = line.split()
-                line = line[1:]
-                try:
-                    line = list(map(eval, line))
-                except NameError:
-                    # 存在部分数据为inf
-                    # 主要是JAVELIN拟合出的tau或sigma
-                    # 这里的处理是直接扔掉该源
-                    print("Infinity in " + filename)
-                else:
-                    label.append(line.pop(7))
-                    sample = line
-                    data.append(sample)
+                if int(float(line[0])) not in remove_ID:
+                    line = line[1:]
+                    try:
+                        line = list(map(eval, line))
+                    except NameError:
+                        # 存在部分数据为inf
+                        # 主要是JAVELIN拟合出的tau或sigma
+                        # 这里的处理是直接扔掉该源
+                        print("Infinity in " + filename)
+                    else:
+                        label.append(line.pop(7))
+                        sample = line
+                        data.append(sample)
             label = norm_label(label)
         return data, label
     except FileNotFoundError:
         # 存在部分块不存在的情况
         print("Missing part: " + filename)
         return [], []
-    
-def merge_data(index_list):
-    # 合并多个数据块
-    merged_data, merged_label = [], []
-    for i in index_list:
-        filename = "./train/test_sample_data_" + str(i)
-        data, label = load_data(filename)
-        merged_data = merged_data + data
-        merged_label = merged_label + label
-    return merged_data, merged_label
+
+def rnd_sampling(data, label, train_size, test_size, seed):
+    # 随机抽样产生训练集和测试集
+    random.seed(seed)
+    rnd_train_data, rnd_train_label = [], []
+    rnd_test_data, rnd_test_label = [], []
+    if train_size + test_size < len(label):
+        rnd_index = random.sample([i for i in range(len(label))], train_size + test_size)
+        rnd_train_index = rnd_index[:train_size]
+        rnd_test_index = rnd_index[train_size+1:]
+        for index in rnd_train_index:
+            rnd_train_data.append(data[index])
+            rnd_train_label.append(label[index])
+        for index in rnd_test_index:
+            rnd_test_data.append(data[index])
+            rnd_test_label.append(label[index])
+        return rnd_train_data, rnd_train_label, \
+            rnd_test_data, rnd_test_label
+    else:
+        print("Random sampling size too large!")
+        return [], [], [], []
+
+# def merge_data(index_list):
+#     # 合并多个数据块
+#     merged_data, merged_label = [], []
+#     for i in index_list:
+#         filename = "./train/test_sample_data_" + str(i)
+#         data, label = load_data(filename)
+#         merged_data = merged_data + data
+#         merged_label = merged_label + label
+#     return merged_data, merged_label
 
 def std_data(data, label, feature):
     # 标准化数据格式, data_list为存放字典的列表

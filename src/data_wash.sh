@@ -1,5 +1,4 @@
-
-
+#!/bin/zsh
 for i in `ls ./data/light_curve/` ;
 do
     # echo $i

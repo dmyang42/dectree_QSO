@@ -1,61 +1,62 @@
-from sklearn.model_selection import GridSearchCV, KFold, train_test_split
-from sklearn.metrics import make_scorer, accuracy_score
-from sklearn.decomposition import PCA 
-from sklearn.ensemble import RandomForestClassifier
-from sklearn import tree
+from model_train import PCA, DT, RF
+from model_test import test_DT, test_RF
 from sklearn.externals import joblib
-from data_util import merge_data, std_data, get_feature
-import subprocess
-import visualize as viz
+from data_util import load_data, std_data, get_feature, rnd_sampling
+import sys
+# import subprocess
+# import data_visualize as viz
 
-# 数据块合并
-index_list = range(10,670)
-data, label = merge_data(index_list)
-print([label.count('0'), label.count('1')])
+seed = int(sys.argv[1])
+# 抽样生成训练集、测试集
+QSO_data, QSO_label = load_data('./train/QSO_sample_data')
+print("total QSO: ", len(QSO_label))
+nQSO_data, nQSO_label = load_data('./train/nQSO_sample_data')
+print("total nQSO: ", len(nQSO_label))
 
-# PCA预处理 - 数据降维
-# PCA模型需要保存, 在测试集和实际使用时都要使用
-pca = PCA(n_components='mle', svd_solver='full')
-pca = PCA()
-new_data = pca.fit_transform(data)
-print("PCA training finished! - with " + str(pca.n_components_) + " features")
+rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
+    = rnd_sampling(QSO_data, QSO_label, 5000, 800, seed)
+rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \
+    = rnd_sampling(nQSO_data, nQSO_label, 5000, 800, seed)
 
-new_data = data
-# feature = get_feature('./train/test_sample_data_1')
-feature = list(map(str, range(pca.n_components_)))
-X, Y, vec = std_data(new_data, label, feature)
+train_data = rnd_train_QSO_data + rnd_train_nQSO_data
+train_label = rnd_train_QSO_label + rnd_train_nQSO_label
+test_data = rnd_test_QSO_data + rnd_test_nQSO_data
+test_label = rnd_test_QSO_label + rnd_test_nQSO_label
 
-# 决策树训练, 也要保存下来测试使用
-dtc = tree.DecisionTreeClassifier(criterion="gini", max_depth=6, min_samples_split=2, \
-    min_samples_leaf=1, max_leaf_nodes=28)
-dtc = dtc.fit(X, Y)
-print("Decision Tree training finished!")
+# 1 - PCA预处理 - 数据降维
+# 出了点问题，暂时没有做PCA
+# pca, new_data = PCA(train_data)
+new_data = train_data
 
-# 随机森林训练
-rfc = RandomForestClassifier(n_estimators=200, oob_score=True, criterion="gini", \
-    min_samples_split=2, min_samples_leaf=1, max_features="log2")
-rfc = RandomForestClassifier(n_estimators=400, oob_score=True, criterion="gini")
-rfc.fit(X, Y)
-print("Random Forest training finished!")
-print("Random Forest oob_score: " + str(rfc.oob_score_))
+# 2 - 数据格式标准化
+feature = get_feature('./train/test_sample_data_1')
+# feature = list(map(str, range(pca.n_components_)))
+X, Y, vec = std_data(new_data, train_label, feature)
 
-# dtc = tree.DecisionTreeClassifier(criterion="gini", max_depth=6, min_samples_split=2, \
-#     min_samples_leaf=1, max_leaf_nodes=28)
-# parameters = {'max_depth': range(2, 20)}
-# kfold = KFold(n_splits=10)
-# scoring_fnc = make_scorer(accuracy_score)
-# grid = GridSearchCV(dtc, parameters, scoring_fnc, cv=kfold)
-# grid = grid.fit(X, Y)
-# clf = grid.best_estimator_
-# for key in parameters.keys():
-#     print('%s: %d'%(key, clf.get_params()[key]))
+# 3 - 决策树训练
+dtc = DT(X, Y)
+
+# 4 - 随机森林训练
+rfc = RF(X, Y)
 
 # viz.dt_viz(dtc, vec.get_feature_names())
 # viz.rf_viz(rfc, vec.get_feature_names())
 
-# 模型保存
-joblib.dump(pca, "./model/test_pca.m")
-joblib.dump(dtc, "./model/test_dt.m")
+# 5 - 模型测试
+# new_data = pca.transform(test_data)
+new_data = test_data
+X, Y, vec = std_data(new_data, test_label, feature)
+score_DT = test_DT(X, Y, dtc)
+score_RF = test_RF(X, Y, rfc)
+
+f1 = open("score_DT", "a+")
+f2 = open("score_RF", "a+")
+print(score_DT, file=f1)
+print(score_RF, file=f2)
+
+# 6 - 模型保存
+# joblib.dump(pca, "./model/test_pca.m")
+# joblib.dump(dtc, "./model/test_dt.m")
 # joblib.dump(rfc, "./model/test_rf.m")
-# joblib.dump(grid, "./model/test_grid.m")
-print("All model saved!")
+# print("All model saved!")
+

@@ -7,11 +7,11 @@ from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import tree
 
-def PCA(data):
+def do_PCA(data):
     # PCA预处理 - 数据降维
     # PCA模型需要保存, 在测试集和实际使用时都要使用
-    # pca = PCA(n_components='mle', svd_solver='full')
-    pca = PCA()
+    pca = PCA(n_components='mle', svd_solver='full')
+    # pca = PCA()
     new_data = pca.fit_transform(data)
     print("PCA training finished! - with " + str(pca.n_components_) + " features")
     return pca, new_data

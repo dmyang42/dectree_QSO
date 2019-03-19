@@ -5,7 +5,7 @@
 # author: topol @ USTC
 # last modified: 2019/3/19
 #
-from model_train import PCA, DT, RF
+from model_train import do_PCA, DT, RF
 from model_test import test_DT, test_RF
 from sklearn.externals import joblib
 from data_util import load_data, std_data, get_feature, rnd_sampling
@@ -33,13 +33,12 @@ test_data = rnd_test_QSO_data + rnd_test_nQSO_data
 test_label = rnd_test_QSO_label + rnd_test_nQSO_label
 
 # 1 - PCA预处理 - 数据降维
-# 出了点问题，暂时没有做PCA
-# pca, new_data = PCA(train_data)
-new_data = train_data
+pca, new_data = do_PCA(train_data)
+# new_data = train_data
 
 # 2 - 数据格式标准化
-feature = get_feature('./train/test_sample_data_1')
-# feature = list(map(str, range(pca.n_components_)))
+# feature = get_feature('./train/test_sample_data_1')
+feature = list(map(str, range(pca.n_components_)))
 X, Y, vec = std_data(new_data, train_label, feature)
 
 # 3 - 决策树训练
@@ -52,8 +51,8 @@ rfc = RF(X, Y)
 # viz.rf_viz(rfc, vec.get_feature_names())
 
 # 5 - 模型测试
-# new_data = pca.transform(test_data)
-new_data = test_data
+new_data = pca.transform(test_data)
+# new_data = test_data
 X, Y, vec = std_data(new_data, test_label, feature)
 score_DT = test_DT(X, Y, dtc)
 score_RF = test_RF(X, Y, rfc)

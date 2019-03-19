@@ -1,4 +1,14 @@
+#!/usr/local/bin/python2
 # -*- coding: utf-8 -*-
+
+#
+# fitting light curve with JAVELIN
+# (https://bitbucket.org/nye17/javelin/overview author: Ying Zu @ SJTU)
+# return fitting parameters tau and sigma in five photometric bands
+# author: topol @ USTC
+# last modified: 2019/3/19
+#
+
 from javelin.zylc import get_data
 from javelin.lcmodel import Cont_Model
 from numpy import exp

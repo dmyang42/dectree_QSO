@@ -1,5 +1,15 @@
 #!/usr/local/bin/python2
 # -*- coding: utf-8 -*-
+
+#
+# This is a script that converts light curve files and photometric files into training sets
+# A multiprocessing method is provided
+# JAVELIN is requried to run this script!
+# https://bitbucket.org/nye17/javelin/overview author: Ying Zu @ SJTU
+# author: topol @ USTC
+# last modified: 2019/3/19
+#
+
 import multiprocessing
 # We must import this explicitly, it is not imported by the top-level
 # multiprocessing module.

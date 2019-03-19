@@ -1,3 +1,8 @@
+# 
+# model train module
+# author: topol @ USTC
+# last modified: 2019/3/19
+#
 from sklearn.decomposition import PCA 
 from sklearn.ensemble import RandomForestClassifier
 from sklearn import tree

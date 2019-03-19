@@ -1,9 +1,15 @@
+# 
+# model test module
+# author: topol @ USTC
+# last modified: 2019/3/19
+#
 from data_util import get_feature
 from sklearn.externals import joblib
 from data_util import std_data
 from sklearn.metrics import classification_report, confusion_matrix  
 
 def test_DT(X, Y, dtc):
+    # decision tree test
     Y_pred_dtc = dtc.predict(X)
     print("DTC Test Result: ")
     print("*******************************************")
@@ -15,6 +21,7 @@ def test_DT(X, Y, dtc):
     return dtc.score(X, Y)
 
 def test_RF(X, Y, rfc):
+    # random forest test
     Y_pred_rfc = rfc.predict(X)
     print("RFC Test Result(" + str(rfc.n_estimators) + "): ")
     print("*******************************************")
@@ -26,10 +33,10 @@ def test_RF(X, Y, rfc):
     return rfc.score(X, Y)
     
 def main():
+    # ignore this part!
+
     test_index_list = range(0, 20)
     test_data, test_label = merge_data(test_index_list)
-    trained_dtc = joblib.load('./model/test_dt.m')
-    trained_rfc = joblib.load('./model/test_rf.m')
     best_rfc = joblib.load('./model/best_rf.m')
     # trained_grid = joblib.load('./model/test_grid.m')
     trained_pca = joblib.load('./model/test_pca.m')

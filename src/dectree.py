@@ -1,3 +1,10 @@
+# 
+# the 'main' script
+# using command 'python dectree.py 3' to run
+# 3 represents a random seed
+# author: topol @ USTC
+# last modified: 2019/3/19
+#
 from model_train import PCA, DT, RF
 from model_test import test_DT, test_RF
 from sklearn.externals import joblib
@@ -8,15 +15,17 @@ import sys
 
 seed = int(sys.argv[1])
 # 抽样生成训练集、测试集
-QSO_data, QSO_label = load_data('./train/QSO_sample_data')
+QSO_data, QSO_label = load_data('./train/QSO_sample_data1')
 print("total QSO: ", len(QSO_label))
-nQSO_data, nQSO_label = load_data('./train/nQSO_sample_data')
+nQSO_data, nQSO_label = load_data('./train/nQSO_sample_data1')
 print("total nQSO: ", len(nQSO_label))
 
+# 生成random sampling的数据集
+# 5500 / 800 为 训练集 / 测试集
 rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
-    = rnd_sampling(QSO_data, QSO_label, 5000, 800, seed)
+    = rnd_sampling(QSO_data, QSO_label, 5500, 800, seed)
 rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \
-    = rnd_sampling(nQSO_data, nQSO_label, 5000, 800, seed)
+    = rnd_sampling(nQSO_data, nQSO_label, 5500, 800, seed)
 
 train_data = rnd_train_QSO_data + rnd_train_nQSO_data
 train_label = rnd_train_QSO_label + rnd_train_nQSO_label

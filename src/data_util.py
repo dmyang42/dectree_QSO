@@ -1,3 +1,9 @@
+# 
+# util used in model fitting
+# primary job is to load QSO_sample_data & nQSO_sample_data and to do random sampling
+# author: topol @ USTC
+# last modified: 2019/3/19
+#
 from sklearn import preprocessing
 from sklearn.feature_extraction import DictVectorizer
 import random
@@ -51,19 +57,19 @@ def load_data(filename):
             feature.remove('MiQSO') # MiQSO相当于label, 从feature中移除
             for line in lines[1:]:
                 line = line.split()
-                if int(float(line[0])) not in remove_ID:
-                    line = line[1:]
-                    try:
-                        line = list(map(eval, line))
-                    except NameError:
-                        # 存在部分数据为inf
-                        # 主要是JAVELIN拟合出的tau或sigma
-                        # 这里的处理是直接扔掉该源
-                        print("Infinity in " + filename)
-                    else:
-                        label.append(line.pop(7))
-                        sample = line
-                        data.append(sample)
+            
+                line = line[1:]
+                try:
+                    line = list(map(eval, line))
+                except NameError:
+                    # 存在部分数据为inf
+                    # 主要是JAVELIN拟合出的tau或sigma
+                    # 这里的处理是直接扔掉该源
+                    print("Infinity in " + filename)
+                else:
+                    label.append(line.pop(7))
+                    sample = line
+                    data.append(sample)
             label = norm_label(label)
         return data, label
     except FileNotFoundError:

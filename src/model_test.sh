@@ -6,7 +6,7 @@
 # author: topol @ USTC
 # last modified: 2019/3/19
 #
-for (( integer=1; integer <= 101; integer++))
+for (( integer=1; integer <= 100; integer++))
 do
     echo "running "$integer
     python dectree.py $integer > /dev/null

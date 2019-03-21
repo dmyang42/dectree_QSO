@@ -4,11 +4,12 @@
 # Combining this catalog to those uncertain variable source in s82var catalog-
 # -we can obtain more quasar sample
 # author: topol @ USTC
-# last modified: 2019/3/19
+# last modified: 2019/3/21
 #
-from astroML.datasets import fetch_dr7_quasar
+from astropy.io import fits
 
-data = fetch_dr7_quasar()
+qso_fits = fits.open('./data/s82_spec_qso.fits')
+qso_data = qso_fits[1].data
 with open('./data/stripe82candidateVar_v1.1.dat') as f:
     lines = f.readlines()
     ID, ra, dec, MiQSO = [], [], [], []
@@ -26,10 +27,10 @@ for i in range(len(MiQSO)):
         MiQSO[i] = 1 # is quasar
 
 nq_id = ID
-nq_ra = [round(i,3) for i in ra]
-nq_dec = [round(i,3) for i in dec]
-q_ra = [round(i,3) for i in data['RA']]
-q_dec = [round(i,3) for i in data['dec']]
+nq_ra = [round(i,2) for i in ra]
+nq_dec = [round(i,2) for i in dec]
+q_ra = [round(i,2) for i in qso_data['ra']]
+q_dec = [round(i,2) for i in qso_data['dec']]
 l1 = list(zip(nq_ra, nq_dec, nq_id, MiQSO))
 l2 = list(zip(q_ra,q_dec))
 
@@ -41,4 +42,5 @@ for nq in l1:
             if nq[0] == q[0] and nq[1] == q[1]: # confirmed by dr7 quasar catalog
                 count = count + 1
                 print(nq[2], file=outfile)
+                break
 print(count)

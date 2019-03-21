@@ -3,11 +3,12 @@
 # -by s82 standard stars catalog(Ivezic): http://faculty.washington.edu/ivezic/sdss/catalogs/stripe82.html
 # !-- NOTICE: this catalog has a bias, thus applying it directly to training procedure may leads to lower precision
 # author: topol @ USTC
-# last modified: 2019/3/19
+# last modified: 2019/3/21
 #
-from astroML.datasets import fetch_sdss_S82standards
+from astropy.io import fits
 
-data = fetch_sdss_S82standards()
+star_fits = fits.open('./data/s82_spec_star.fits')
+star_data = star_fits[1].data
 with open('./data/stripe82candidateVar_v1.1.dat') as f:
     lines = f.readlines()
     ID, ra, dec, MiQSO = [], [], [], []
@@ -25,10 +26,10 @@ for i in range(len(MiQSO)):
         MiQSO[i] = 1 # is quasar
 
 nq_id = ID
-nq_ra = [round(i,3) for i in ra]
-nq_dec = [round(i,3) for i in dec]
-q_ra = [round(i,3) for i in data['RA']]
-q_dec = [round(i,3) for i in data['DEC']]
+nq_ra = [round(i,2) for i in ra]
+nq_dec = [round(i,2) for i in dec]
+q_ra = [round(i,2) for i in star_data['ra']]
+q_dec = [round(i,2) for i in star_data['dec']]
 l1 = list(zip(nq_ra, nq_dec, nq_id, MiQSO))
 l2 = list(zip(q_ra, q_dec))
 
@@ -40,4 +41,5 @@ for nq in l1:
             if nq[0] == q[0] and nq[1] == q[1]: # confirmed in s82stdstar catalog
                 count = count + 1
                 print(nq[2], file=outfile)
+                break
 print(count)

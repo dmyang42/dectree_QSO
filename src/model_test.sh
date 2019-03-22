@@ -6,8 +6,9 @@
 # author: topol @ USTC
 # last modified: 2019/3/19
 #
+mode=$1
 for (( integer=1; integer <= 100; integer++))
 do
     echo "running "$integer
-    python dectree.py $integer > /dev/null
+    python dectree.py $mode $integer > /dev/null
 done

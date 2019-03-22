@@ -1,46 +1,54 @@
 # 
 # the 'main' script
-# using command 'python dectree.py 3' to run
+# using command 'python dectree.py 1 3' to run
+# 1 represents data sets mode
 # 3 represents a random seed
 # author: topol @ USTC
-# last modified: 2019/3/21
+# last modified: 2019/3/22
 #
 from model_train import do_PCA, decision_tree, random_forest, adaptive_boost, gradient_boost
 from model_test import test_DT, test_RF, test_AB, test_GB
-from model_util import tree_to_code, load_data_set
+from model_util import tree_to_code, load_data_set, print_feature_importance
 from sklearn.externals import joblib
 from data_util import std_data, get_feature
 import sys
+import numpy as np
 # import subprocess
 import model_visualize as viz
 
-seed = int(sys.argv[1])
+mode = int(sys.argv[1])
+seed = int(sys.argv[2])
 # 抽样生成训练集、测试集
-mode = 0
-train_data, train_label, test_data, test_label = load_data_set(mode, seed)
+# mode 0 - nqso是s82 std star的
+# mode 1 - nqso是做了iband filter并附加了dr7 quasar catalog
+train_data, train_label, test_data, test_label = load_data_set(mode, 5000, 1000, seed)
 
 # 1 - PCA预处理 - 数据降维
 # pca, new_data = do_PCA(train_data)
 new_data = train_data
 
 # 2 - 数据格式标准化
-feature = get_feature('./train/test_sample_data_1')
+feature = get_feature('./train/raw/test_sample_data_1')
 # feature = list(map(str, range(pca.n_components_)))
 X, Y, vec = std_data(new_data, train_label, feature)
 
 # 3 - 决策树训练
 dtc = decision_tree(X, Y)
+print_feature_importance(dtc, vec.get_feature_names())
 
 # 4 - 随机森林训练
 rfc = random_forest(X, Y)
+print_feature_importance(rfc, vec.get_feature_names())
 
 # 5 - AdaBoost训练
 abc = adaptive_boost(X, Y)
+print_feature_importance(abc, vec.get_feature_names())
 
 # 6- GBDT训练
 gbc = gradient_boost(X, Y)
+print_feature_importance(gbc, vec.get_feature_names())
 
-# viz.dt_viz(dtc, vec.get_feature_names())
+viz.dt_viz(dtc, vec.get_feature_names())
 # viz.rf_viz(rfc, vec.get_feature_names())
 
 # 6 - 模型测试
@@ -52,14 +60,14 @@ qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF = t
 qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB = test_AB(X, Y, abc)
 qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = test_GB(X, Y, gbc)
 
-f1 = open("score_DT_0", "a+")
-f2 = open("score_RF_0", "a+")
-f3 = open("score_AB_0", "a+")
-f4 = open("score_GB_0", "a+")
-print(qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT, file=f1)
-print(qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF, file=f2)
-print(qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB, file=f3)
-print(qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB, file=f4)
+# f1 = open("score_DT_0", "a+")
+# f2 = open("score_RF_0", "a+")
+# f3 = open("score_AB_0", "a+")
+# f4 = open("score_GB_0", "a+")
+# print(qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT, file=f1)
+# print(qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF, file=f2)
+# print(qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB, file=f3)
+# print(qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB, file=f4)
 
 # trun tree model to python function
 # ! - dtc only

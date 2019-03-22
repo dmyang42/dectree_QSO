@@ -46,7 +46,7 @@ def adaptive_boost(X, Y):
 
 def gradient_boost(X, Y):
     # GBDT训练
-    gbc = GradientBoostingClassifier(learning_rate=0.1, n_estimators=50)
+    gbc = GradientBoostingClassifier(learning_rate=0.1, n_estimators=60)
     gbc.fit(X, Y)
     print("GBDT training finished!")
     return gbc

@@ -27,7 +27,7 @@ def read_ID_file(filename):
 def i_band_filter():
     # 去除i > 19.00的非QSO源
     # 大概有一万多个
-    remove_ID = read_ID_file('./i_filter')
+    remove_ID = read_ID_file('./data/i_filter')
     return remove_ID
 
 def additional_QSO():
@@ -58,6 +58,7 @@ def load_data(infile, outfile1, outfile2, mode):
     remove_ID = i_band_filter() # list of nqso that has a >19.0 i band luminosity
     additional_QSO_ID = additional_QSO() # list of nqso that has later confirmed as qso
     confirmed_star_ID = confirmed_star() # list of nqso that has later confirmed as star
+    quasar_num, nquasar_num = 0, 0
     try:
         with open(infile) as f:
             lines = f.readlines()
@@ -65,31 +66,43 @@ def load_data(infile, outfile1, outfile2, mode):
             feature = lines[0].split()
             for line in lines[1:]:
                 line = line.split()
-                if mode is 1: # use s82 standard star catalog to establish nQSO_file
+                if mode is 0: # use s82 standard star catalog to establish nQSO_file
                     if int(float(line[0])) in additional_QSO_ID:
-                        line[8] = 23.33
+                        line[8] = -23.33
                     if norm_label(float(line[8])):
                         print_line(line, outfile1)
-                    if int(float(line[0])) in confirmed_star_ID:
+                        quasar_num = quasar_num + 1
+                    elif int(float(line[0])) in confirmed_star_ID:
                         print_line(line, outfile2)
-                elif mode is 0: # use i-band < 19.00 & not sure if quasar in s82 var catalog to establish nQSO_file
-                    if int(float(line[0])) not in remove_ID:
+                        nquasar_num = nquasar_num + 1
+                elif mode is 1: # use i-band < 19.00 & not sure if quasar in s82 var catalog to establish nQSO_file
+                    if int(float(line[0])) in remove_ID:
+                        continue
+                    else:
                         if int(float(line[0])) in additional_QSO_ID:
-                            line[8] = 23.33
+                            line[8] = -23.33
                         if norm_label(float(line[8])):
                             print_line(line, outfile1)
+                            quasar_num = quasar_num + 1
                         else:
                             print_line(line, outfile2)
+                            nquasar_num = nquasar_num + 1
+        return quasar_num, nquasar_num
     except FileNotFoundError:
         # 存在部分块不存在的情况
         print("Missing part: " + infile)
+        return 0, 0
 
 def batch_load_data(index_list, outfile1, outfile2, mode):
     # 加载多个数据块的文件到两类输出文件
     merged_data, merged_label = [], []
+    quasar_total, nquasar_total = 0, 0
     for i in index_list:
-        filename = "./train/test_sample_data_" + str(i)
-        load_data(filename, outfile1, outfile2, mode)
+        filename = "./train/raw/test_sample_data_" + str(i)
+        quasar_num, nquasar_num = load_data(filename, outfile1, outfile2, mode)
+        quasar_total = quasar_total + quasar_num
+        nquasar_total = nquasar_total + nquasar_num
+    return quasar_total, nquasar_total
 
 def get_feature(filename):
     # return feature list in certain catalog file
@@ -108,13 +121,15 @@ def main():
     # mode 1 - 使用s82 var catalog中不确定是否为qso加上iband小于19等的条件作为nQSO训练集
     mode = int(sys.argv[1])
 
-    QSO_file = open("./train/QSO_sample_data", "w+")
-    nQSO_file = open("./train/nQSO_sample_data", "w+")
-    feature = get_feature("./train/test_sample_data_1")
+    QSO_file = open("./train/QSO_sample_data" + str(mode), "w+")
+    nQSO_file = open("./train/nQSO_sample_data" + str(mode), "w+")
+    feature = get_feature("./train/raw/test_sample_data_1")
     print_line(feature, QSO_file)
     print_line(feature, nQSO_file)
     index_list = range(0,675) # traverse all test_sample_data_* files
-    batch_load_data(index_list, QSO_file, nQSO_file, mode)
+    q, nq = batch_load_data(index_list, QSO_file, nQSO_file, mode)
+    print("total quasar: ", q)
+    print("total nquasar: ", nq)
 
 if __name__ == "__main__":
     main()

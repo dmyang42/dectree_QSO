@@ -15,7 +15,7 @@ def if_quasar(MiQSO):
         return 1
 
 ID, r, ri, label = [], [], [], []
-additional_quasar_ID = read_ID_file('./additional_confirmed_quasar')
+additional_quasar_ID = read_ID_file('./data/additional_confirmed_quasar')
 with open('./data/stripe82candidateVar_v1.1.dat') as f:
     lines = f.readlines()
     # sources = []
@@ -25,7 +25,7 @@ with open('./data/stripe82candidateVar_v1.1.dat') as f:
         # source = {}
         i_band = float(line[4]) - float(line[7])
         quasar = if_quasar(float(line[16]))
-        if i_band > 19.00 and quasar == 0 and line[0] not in additional_quasar_ID:
+        if i_band > 19.00 and quasar is 0 and int(float(line[0])) not in additional_quasar_ID:
             # source['ID'] = line[0]
             # source['i'] = float(line[4]) - float(line[7])
             # sources.append(source)

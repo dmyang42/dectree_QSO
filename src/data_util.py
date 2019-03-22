@@ -8,17 +8,6 @@ from sklearn import preprocessing
 from sklearn.feature_extraction import DictVectorizer
 import random
 
-def i_band_filter():
-    # 去除i > 19.00的非QSO源
-    # 大概有一万多个
-    remove_ID = []
-    with open('./i_filter') as f:
-        lines = f.readlines()
-        for line in lines:
-            line = line.split()
-            remove_ID.append(int(line[0]))
-    return remove_ID
-
 def get_feature(filename):
     try:
         with open(filename) as f:
@@ -48,7 +37,6 @@ def norm_label(label):
 def load_data(filename):
     # 导入单个数据块数据,保存为矩阵格式输出
     # label代表是否是QSO
-    remove_ID = i_band_filter()
     try:
         with open(filename) as f:
             lines = f.readlines()
@@ -65,7 +53,9 @@ def load_data(filename):
                     # 存在部分数据为inf
                     # 主要是JAVELIN拟合出的tau或sigma
                     # 这里的处理是直接扔掉该源
-                    print("Infinity in " + filename)
+                    print("Infinity!")
+                except SyntaxError:
+                    print("EOF line!")
                 else:
                     label.append(line.pop(7))
                     sample = line

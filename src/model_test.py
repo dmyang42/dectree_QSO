@@ -25,7 +25,7 @@ def test_DT(X, Y, dtc):
     Y_pred_dtc = dtc.predict(X)
     print("DTC Test Result: ")
     print("*******************************************")
-    target_names = ['Quasar', 'Not QSO']
+    target_names = ['Not QSO', 'QSO']
     matrix = confusion_matrix(Y, Y_pred_dtc)
     print(matrix)
     qso_precision = calculate_precision(matrix[0][0], matrix[1][0])
@@ -42,7 +42,7 @@ def test_RF(X, Y, rfc):
     Y_pred_rfc = rfc.predict(X)
     print("RFC Test Result(" + str(rfc.n_estimators) + "): ")
     print("*******************************************")
-    target_names = ['Quasar', 'Not QSO']
+    target_names = ['Not QSO', 'QSO']
     matrix = confusion_matrix(Y, Y_pred_rfc)
     print(matrix)
     qso_precision = calculate_precision(matrix[0][0], matrix[1][0])
@@ -59,7 +59,7 @@ def test_AB(X, Y, abc):
     Y_pred_abc = abc.predict(X)
     print("ABC Test Result: ")
     print("*******************************************")
-    target_names = ['Quasar', 'Not QSO']
+    target_names = ['Not QSO', 'QSO']
     matrix = confusion_matrix(Y, Y_pred_abc)
     print(matrix)
     qso_precision = calculate_precision(matrix[0][0], matrix[1][0])
@@ -76,7 +76,7 @@ def test_GB(X, Y, gbc):
     Y_pred_gbc = gbc.predict(X)
     print("GBC Test Result: ")
     print("*******************************************")
-    target_names = ['Quasar', 'Not QSO']
+    target_names = ['Not QSO', 'QSO']
     matrix = confusion_matrix(Y, Y_pred_gbc)
     print(matrix)
     qso_precision = calculate_precision(matrix[0][0], matrix[1][0])
@@ -105,7 +105,7 @@ def main():
     Y_best_rfc = best_rfc.predict(X)
     print("Best RFC Test Result(" + str(best_rfc.n_estimators) + "): ")
     print("*******************************************")
-    target_names = ['Quasar', 'Not QSO']
+    target_names = ['Not QSO', 'QSO']
     print(confusion_matrix(Y, Y_best_rfc))  
     print(classification_report(Y, Y_best_rfc, target_names=target_names))
     print("total score: ", best_rfc.score(X, Y))

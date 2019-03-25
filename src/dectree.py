@@ -10,7 +10,7 @@ from model_train import do_PCA, decision_tree, random_forest, adaptive_boost, gr
 from model_test import test_DT, test_RF, test_AB, test_GB
 from model_util import tree_to_code, load_data_set, print_feature_importance
 from sklearn.externals import joblib
-from data_util import std_data, get_feature
+from data_util import std_data, get_feature, load_data
 import sys
 import numpy as np
 # import subprocess
@@ -75,9 +75,9 @@ qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = t
 
 # 7 - 模型保存
 # joblib.dump(pca, "./model/test_pca.m")
-# joblib.dump(dtc, "./model/test_dt.m")
-# joblib.dump(rfc, "./model/test_rf.m")
-# joblib.dump(abc, "./model/test_ab.m")
-# joblib.dump(gbc, "./model/test_gbc.m")
-# print("All model saved!")
+joblib.dump(dtc, "./model/test_dt.m")
+joblib.dump(rfc, "./model/test_rf.m")
+joblib.dump(abc, "./model/test_ab.m")
+joblib.dump(gbc, "./model/test_gbc.m")
+print("All model saved!")
 

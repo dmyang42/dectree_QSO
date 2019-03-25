@@ -28,7 +28,7 @@ def decision_tree(X, Y):
 
 def random_forest(X, Y):
     # 随机森林训练
-    rfc = RandomForestClassifier(n_estimators=200, oob_score=True, criterion="gini", \
+    rfc = RandomForestClassifier(n_estimators=400, oob_score=True, criterion="gini", \
         max_features="log2")
     rfc.fit(X, Y)
     print("Random Forest training finished!")

@@ -3,10 +3,10 @@
 #
 # re-run crashed block recorded in 'missing_part'
 # author: topol @ USTC
-# last modified: 2019/3/19
+# last modified: 2019/3/22
 #
 
-for line in `cat missing_part`
+for line in `cat ./data/missing_part`
 do
     start_point=`expr $line \* 100`
     end_point=`expr $line \* 100 + 100`

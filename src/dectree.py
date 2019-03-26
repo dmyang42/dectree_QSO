@@ -10,7 +10,7 @@ from model_train import do_PCA, decision_tree, random_forest, adaptive_boost, gr
 from model_test import test_DT, test_RF, test_AB, test_GB
 from model_util import tree_to_code, load_data_set, print_feature_importance
 from sklearn.externals import joblib
-from data_util import std_data, get_feature
+from data_util import std_data, get_feature, load_data
 import sys
 import numpy as np
 # import subprocess
@@ -21,7 +21,7 @@ seed = int(sys.argv[2])
 # 抽样生成训练集、测试集
 # mode 0 - nqso是s82 std star的
 # mode 1 - nqso是做了iband filter并附加了dr7 quasar catalog
-train_data, train_label, test_data, test_label = load_data_set(mode, 5000, 1000, seed)
+train_data, train_label, test_data, test_label = load_data_set(mode, 7000, 1200, seed)
 
 # 1 - PCA预处理 - 数据降维
 # pca, new_data = do_PCA(train_data)
@@ -31,22 +31,23 @@ new_data = train_data
 feature = get_feature('./train/raw/test_sample_data_1')
 # feature = list(map(str, range(pca.n_components_)))
 X, Y, vec = std_data(new_data, train_label, feature)
+Y = Y.reshape(len(Y))
 
 # 3 - 决策树训练
 dtc = decision_tree(X, Y)
-print_feature_importance(dtc, vec.get_feature_names())
+# print_feature_importance(dtc, vec.get_feature_names())
 
 # 4 - 随机森林训练
 rfc = random_forest(X, Y)
-print_feature_importance(rfc, vec.get_feature_names())
+# print_feature_importance(rfc, vec.get_feature_names())
 
 # 5 - AdaBoost训练
 abc = adaptive_boost(X, Y)
-print_feature_importance(abc, vec.get_feature_names())
+# print_feature_importance(abc, vec.get_feature_names())
 
 # 6- GBDT训练
 gbc = gradient_boost(X, Y)
-print_feature_importance(gbc, vec.get_feature_names())
+# print_feature_importance(gbc, vec.get_feature_names())
 
 viz.dt_viz(dtc, vec.get_feature_names())
 # viz.rf_viz(rfc, vec.get_feature_names())
@@ -75,9 +76,9 @@ qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = t
 
 # 7 - 模型保存
 # joblib.dump(pca, "./model/test_pca.m")
-# joblib.dump(dtc, "./model/test_dt.m")
-# joblib.dump(rfc, "./model/test_rf.m")
-# joblib.dump(abc, "./model/test_ab.m")
-# joblib.dump(gbc, "./model/test_gbc.m")
-# print("All model saved!")
+joblib.dump(dtc, "./model/test_dt.m")
+joblib.dump(rfc, "./model/test_rf.m")
+joblib.dump(abc, "./model/test_ab.m")
+joblib.dump(gbc, "./model/test_gbc.m")
+print("All model saved!")
 

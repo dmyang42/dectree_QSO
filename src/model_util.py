@@ -24,10 +24,11 @@ def load_data_set(mode, train_size=5600, test_size=800, seed=3):
 
     # 生成random sampling的数据集
     # 5500 / 800 为 训练集 / 测试集
+    # 考虑实际情况可能nQSO的测试集要乘6左右
     rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
         = rnd_sampling(QSO_data, QSO_label, train_size, test_size, seed)
     rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \
-        = rnd_sampling(nQSO_data, nQSO_label, train_size, test_size * 6, seed)
+        = rnd_sampling(nQSO_data, nQSO_label, train_size, test_size, seed)
 
     train_data = rnd_train_QSO_data + rnd_train_nQSO_data
     train_label = rnd_train_QSO_label + rnd_train_nQSO_label

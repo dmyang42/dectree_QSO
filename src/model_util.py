@@ -5,7 +5,7 @@
 # 2) print feature importances of specific clf
 # 3) turn clf into python function code
 # author: topol @ USTC
-# last modified: 2019/3/22
+# last modified: 2019/3/26
 #
 from sklearn.tree import _tree
 from data_util import load_data, rnd_sampling
@@ -27,13 +27,29 @@ def load_data_set(mode, train_size=5600, test_size=800, seed=3):
     rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
         = rnd_sampling(QSO_data, QSO_label, train_size, test_size, seed)
     rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \
-        = rnd_sampling(nQSO_data, nQSO_label, train_size, test_size, seed)
+        = rnd_sampling(nQSO_data, nQSO_label, train_size, test_size * 6, seed)
 
     train_data = rnd_train_QSO_data + rnd_train_nQSO_data
     train_label = rnd_train_QSO_label + rnd_train_nQSO_label
     test_data = rnd_test_QSO_data + rnd_test_nQSO_data
     test_label = rnd_test_QSO_label + rnd_test_nQSO_label
     
+    return train_data, train_label, test_data, test_label
+
+def imbalance_data_set(mode, seed):
+    # return imbalance train and test data set
+    QSO_data, QSO_label = load_data('./train/QSO_sample_data'+str(mode))
+    nQSO_data, nQSO_label = load_data('./train/nQSO_sample_data2'+str(mode))
+    rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
+            = rnd_sampling(QSO_data, QSO_label, 7000, 1000, seed)
+    rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
+            = rnd_sampling(QSO_data, QSO_label, 7000, 1000, seed)
+    rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \
+            = rnd_sampling(nQSO_data, nQSO_label, 20000, 6000, seed)
+    train_data = rnd_train_QSO_data + rnd_train_nQSO_data
+    train_label = rnd_train_QSO_label + rnd_train_nQSO_label
+    test_data = rnd_test_QSO_data + rnd_test_nQSO_data
+    test_label = rnd_test_QSO_label + rnd_test_nQSO_label
     return train_data, train_label, test_data, test_label
 
 def print_feature_importance(clf, feature):

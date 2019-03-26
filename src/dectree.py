@@ -34,19 +34,19 @@ X, Y, vec = std_data(new_data, train_label, feature)
 
 # 3 - 决策树训练
 dtc = decision_tree(X, Y)
-print_feature_importance(dtc, vec.get_feature_names())
+# print_feature_importance(dtc, vec.get_feature_names())
 
 # 4 - 随机森林训练
 rfc = random_forest(X, Y)
-print_feature_importance(rfc, vec.get_feature_names())
+# print_feature_importance(rfc, vec.get_feature_names())
 
 # 5 - AdaBoost训练
-abc = adaptive_boost(X, Y)
-print_feature_importance(abc, vec.get_feature_names())
+# abc = adaptive_boost(X, Y)
+# print_feature_importance(abc, vec.get_feature_names())
 
 # 6- GBDT训练
-gbc = gradient_boost(X, Y)
-print_feature_importance(gbc, vec.get_feature_names())
+# gbc = gradient_boost(X, Y)
+# print_feature_importance(gbc, vec.get_feature_names())
 
 viz.dt_viz(dtc, vec.get_feature_names())
 # viz.rf_viz(rfc, vec.get_feature_names())
@@ -57,8 +57,8 @@ new_data = test_data
 X, Y, vec = std_data(new_data, test_label, feature)
 qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT = test_DT(X, Y, dtc)
 qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF = test_RF(X, Y, rfc)
-qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB = test_AB(X, Y, abc)
-qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = test_GB(X, Y, gbc)
+# qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB = test_AB(X, Y, abc)
+# qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = test_GB(X, Y, gbc)
 
 # f1 = open("score_DT_0", "a+")
 # f2 = open("score_RF_0", "a+")
@@ -77,7 +77,7 @@ qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = t
 # joblib.dump(pca, "./model/test_pca.m")
 joblib.dump(dtc, "./model/test_dt.m")
 joblib.dump(rfc, "./model/test_rf.m")
-joblib.dump(abc, "./model/test_ab.m")
-joblib.dump(gbc, "./model/test_gbc.m")
+# joblib.dump(abc, "./model/test_ab.m")
+# joblib.dump(gbc, "./model/test_gbc.m")
 print("All model saved!")
 

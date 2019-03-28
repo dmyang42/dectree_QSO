@@ -23,10 +23,12 @@ with open('./data/stripe82candidateVar_v1.1.dat') as f:
     for line in lines[1:]:
         line = line.split()
         # source = {}
-        i_band = float(line[4]) - float(line[7])
+        i_band = float(line[4]) - float(line[7]) # 4 for r, 7 for ri
         quasar = if_quasar(float(line[16]))
-        if i_band > 19.00 and quasar is 0 and int(float(line[0])) not in additional_quasar_ID:
+        # if i_band > 19.00 and quasar is 0 and int(float(line[0])) not in additional_quasar_ID:
             # source['ID'] = line[0]
             # source['i'] = float(line[4]) - float(line[7])
             # sources.append(source)
+            # print(line[0])
+        if i_band > 19.00:
             print(line[0])

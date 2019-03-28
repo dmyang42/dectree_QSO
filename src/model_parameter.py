@@ -1,3 +1,8 @@
+# 
+# grid search to find best model parameters
+# author: topol @ USTC
+# last modified: 2019/3/27
+#
 from model_test import test_DT, test_RF, test_AB, test_GB
 from model_util import tree_to_code, load_data_set
 from data_util import std_data, get_feature
@@ -63,7 +68,7 @@ def gbc_parameter(param, range, X, Y):
     print_best_score(gsearch, param_test)
 
 # 1 - load data
-train_data, train_label, test_data, test_label = load_data_set(2, 7000, 1200, 42)
+train_data, train_label, test_data, test_label = load_data_set(2, 7200, 1100, 42)
 feature = get_feature('./train/raw/test_sample_data_1')
 X, Y, vec = std_data(train_data, train_label, feature)
 Y = Y.reshape(len(Y))
@@ -81,6 +86,6 @@ Y = Y.reshape(len(Y))
 # abc_parameter(param, param_range, X, Y)
 
 # for gbc
-param = ['n_estimators', 'learning_rate']
-param_range = [range(40,80,5), [0.1 * i for i in range(5,10,1)]]
-abc_parameter(param, param_range, X, Y)
+param = ['learning_rate']
+param_range = [[0.2 * i for i in range(1,10,1)]]
+gbc_parameter(param, param_range, X, Y)

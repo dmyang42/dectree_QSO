@@ -21,7 +21,7 @@ seed = int(sys.argv[2])
 # 抽样生成训练集、测试集
 # mode 0 - nqso是s82 std star的
 # mode 1 - nqso是做了iband filter并附加了dr7 quasar catalog
-train_data, train_label, test_data, test_label = load_data_set(mode, 7000, 1200, seed)
+train_data, train_label, test_data, test_label = load_data_set(mode, 1600, 400, seed)
 
 # 1 - PCA预处理 - 数据降维
 # pca, new_data = do_PCA(train_data)
@@ -61,14 +61,14 @@ qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF = t
 qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB = test_AB(X, Y, abc)
 qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = test_GB(X, Y, gbc)
 
-# f1 = open("score_DT_0", "a+")
-# f2 = open("score_RF_0", "a+")
-# f3 = open("score_AB_0", "a+")
-# f4 = open("score_GB_0", "a+")
-# print(qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT, file=f1)
-# print(qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF, file=f2)
-# print(qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB, file=f3)
-# print(qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB, file=f4)
+f1 = open("score_DT_0", "a+")
+f2 = open("score_RF_0", "a+")
+f3 = open("score_AB_0", "a+")
+f4 = open("score_GB_0", "a+")
+print(qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT, file=f1)
+print(qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF, file=f2)
+print(qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB, file=f3)
+print(qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB, file=f4)
 
 # trun tree model to python function
 # ! - dtc only

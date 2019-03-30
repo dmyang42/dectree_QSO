@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # util used in model fitting
 # primary job is to load QSO_sample_data & nQSO_sample_data and to do random sampling
@@ -7,19 +9,29 @@
 from sklearn import preprocessing
 from sklearn.feature_extraction import DictVectorizer
 import random
+from MyError import *
 
-def get_feature(filename):
-    try:
-        with open(filename) as f:
-            lines = f.readlines()
-            feature = lines[0].split()
-            feature.remove('ID')
-            feature.remove('MiQSO') # MiQSO相当于label, 从feature中移除
-        return feature
-    except FileNotFoundError:
-        # 存在部分块不存在的情况
-        print("Missing part: " + filename)
-        return []
+def get_feature(mode='all'):
+    if mode is 'all':
+        filename = './train/raw/test_sample_data_1'
+        try:
+            with open(filename) as f:
+                lines = f.readlines()
+                feature = lines[0].split()
+                feature.remove('ID')
+                feature.remove('MiQSO') # MiQSO相当于label, 从feature中移除
+            return feature
+        except FileNotFoundError:
+            # 存在部分块不存在的情况
+            print("Missing part: " + filename)
+            return []
+    elif mode == 'color':
+        return ['ug', 'gr', 'ri', 'iz']
+    elif mode == 'variability':
+        return ['gAmpl', 'rAmpl', 'iAmpl', 'tau_u', 'tau_g', 'tau_r', 'tau_i', \
+            'tau_z', 'sigma_u ', ' sigma_g ', ' sigma_r ', ' sigma_i ', ' sigma_z']
+    else:
+        raise InputError('No such feature mode!')
 
 def norm_label(label):
     # 输入一个未处理的label列表
@@ -34,7 +46,21 @@ def norm_label(label):
             label_list[i] = str(1)
     return label_list
 
-def load_data(filename):
+def all_feature(_line):
+    # 全部feature都使用
+    return _line
+
+def color_feature(_line):
+    # 仅使用颜色feature
+    _sub_line = _line[0:4]
+    return _sub_line
+
+def variability_feature(_line):
+    # 仅使用光变feature
+    _sub_line = _line[4:]
+    return _sub_line
+
+def load_data(filename, mode):
     # 导入单个数据块数据,保存为矩阵格式输出
     # label代表是否是QSO
     try:
@@ -57,8 +83,21 @@ def load_data(filename):
                 except SyntaxError:
                     print("EOF line!")
                 else:
-                    label.append(line.pop(7))
-                    sample = line
+                    label.append(line.pop(7)) # MiQSO对应的为7,pop掉
+                    # now line features are:
+                    # ug / gr / ri / iz / gAmpl / rAmpl / iAmpl / 
+                    # tau_u / tau_g / tau_r / tau_i / tau_z / 
+                    # sigma_u / sigma_g / sigma_r / sigma_i / sigma_z
+                    # 0-3 are color
+                    # 4-16 are variability
+                    if mode == 'all':
+                        sample = all_feature(line)
+                    elif mode == 'color':
+                        sample = color_feature(line)
+                    elif mode == 'variability':
+                        sample = variability_feature(line)
+                    else:
+                        raise InputError('No such feature mode!')
                     data.append(sample)
             label = norm_label(label)
         return data, label

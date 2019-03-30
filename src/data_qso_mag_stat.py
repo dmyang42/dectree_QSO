@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # author: topol @ USTC
 # last modified: 2019/3/23

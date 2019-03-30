@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # match variable source catalog with dr14
 # output two ID file for matched stars and quasars

@@ -1,7 +1,9 @@
+# -*- coding: utf-8 -*-
+
 # 
 # model train module
 # author: topol @ USTC
-# last modified: 2019/3/21
+# last modified: 2019/3/26
 #
 from sklearn.decomposition import PCA 
 from sklearn.ensemble import RandomForestClassifier
@@ -29,8 +31,10 @@ def decision_tree(X, Y):
 def random_forest(X, Y):
     # 随机森林训练
     # 不用调参了
+    # rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
+    #     max_features="log2", class_weight={0:1,1:6})
     rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
-        max_features="log2", class_weight={0:1,1:6})
+        max_features="log2")
     rfc.fit(X, Y)
     print("Random Forest training finished!")
     print("Random Forest oob_score: " + str(rfc.oob_score_))
@@ -40,14 +44,14 @@ def adaptive_boost(X, Y):
     # AdaBoost训练
     abc = AdaBoostClassifier(DecisionTreeClassifier(max_depth=2, min_samples_split=20, min_samples_leaf=5),
                             algorithm="SAMME",
-                            n_estimators=60, learning_rate=0.7)
+                            n_estimators=60, learning_rate=0.1)
     abc.fit(X, Y)
     print("AdaBoost training finished!")
     return abc
 
 def gradient_boost(X, Y):
     # GBDT训练
-    gbc = GradientBoostingClassifier(learning_rate=0.6, n_estimators=65)
+    gbc = GradientBoostingClassifier(learning_rate=0.1, n_estimators=100)
     gbc.fit(X, Y)
     print("GBDT training finished!")
     return gbc

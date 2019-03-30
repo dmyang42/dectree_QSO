@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # run RF for imbalance data set
 # and do SMOTE to compensate this imbalance
@@ -11,14 +13,14 @@ from model_train import random_forest
 from model_test import test_RF
 import pandas as pd
 
-train_data, train_label, test_data, test_label = imbalance_data_set(2, 3)
+train_data, train_label, test_data, test_label = imbalance_data_set(3, 3)
 feature = get_feature('./train/raw/test_sample_data_1')
 X, Y, vec = std_data(train_data, train_label, feature)
-Y = Y.reshape(27000)
+Y = Y.reshape(len(Y))
 print("Original training set: ")
 print(pd.value_counts(Y))
 
-smo = SMOTE(random_state=42)
+smo = SMOTE(random_state=3)
 X_smo, Y_smo = smo.fit_sample(X, Y)
 print("SMOTE training set: ")
 print(pd.value_counts(Y_smo))

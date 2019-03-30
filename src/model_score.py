@@ -1,6 +1,15 @@
-import numpy as np
+# -*- coding: utf-8 -*-
 
-filename = './score_GB_0' 
+# 
+# calculate average score
+# author: topol @ USTC
+# last modified: 2019/3/27
+#
+import numpy as np
+import sys
+
+model = sys.argv[1]
+filename = './score_' + model + '_0' 
 with open(filename) as f:
     lines = f.readlines()
     qso_p, qso_r, nqso_p, nqso_r, score = [], [], [], [], []

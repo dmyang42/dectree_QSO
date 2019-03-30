@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # util used in model fitting
 # primary jobs are:
@@ -5,26 +7,32 @@
 # 2) print feature importances of specific clf
 # 3) turn clf into python function code
 # author: topol @ USTC
-# last modified: 2019/3/26
+# last modified: 2019/3/30
 #
 from sklearn.tree import _tree
 from data_util import load_data, rnd_sampling
 import numpy as np
 
-def load_data_set(mode, train_size=5600, test_size=800, seed=3):
+def load_data_set(mode, feature_mode, seed=3):
     # 抽样生成训练集、测试集
     # mode 0 - nqso是s82 std star的
     # mode 1 - nqso是做了iband filter并附加了dr7 quasar catalog
     qso_file = './train/QSO_sample_data' + str(mode)
     nqso_file = './train/nQSO_sample_data' + str(mode)
-    QSO_data, QSO_label = load_data(qso_file)
+    QSO_data, QSO_label = load_data(qso_file, feature_mode)
     print("total QSO: ", len(QSO_label))
-    nQSO_data, nQSO_label = load_data(nqso_file)
+    nQSO_data, nQSO_label = load_data(nqso_file, feature_mode)
     print("total nQSO: ", len(nQSO_label))
 
+    min_size = min(len(QSO_label), len(nQSO_label))
+    train_size = int(min_size * 5 / 6 - 1)
+    test_size = int(min_size / 6 - 1)
+    print("Training Set Size: ", train_size)
+    print("Testing Set Size: ", test_size)
+    print()
+
     # 生成random sampling的数据集
-    # 5500 / 800 为 训练集 / 测试集
-    # 考虑实际情况可能nQSO的测试集要乘6左右
+    # 训练集 / 测试集 = 5 : 1
     rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
         = rnd_sampling(QSO_data, QSO_label, train_size, test_size, seed)
     rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \
@@ -39,14 +47,12 @@ def load_data_set(mode, train_size=5600, test_size=800, seed=3):
 
 def imbalance_data_set(mode, seed):
     # return imbalance train and test data set
-    QSO_data, QSO_label = load_data('./train/QSO_sample_data'+str(mode))
-    nQSO_data, nQSO_label = load_data('./train/nQSO_sample_data2'+str(mode))
+    QSO_data, QSO_label = load_data()
+    nQSO_data, nQSO_label = load_data()
     rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
-            = rnd_sampling(QSO_data, QSO_label, 7000, 1000, seed)
-    rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
-            = rnd_sampling(QSO_data, QSO_label, 7000, 1000, seed)
+            = rnd_sampling(QSO_data, QSO_label, 1600, 400, seed)
     rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \
-            = rnd_sampling(nQSO_data, nQSO_label, 20000, 6000, seed)
+            = rnd_sampling(nQSO_data, nQSO_label, 1600, 2400, seed)
     train_data = rnd_train_QSO_data + rnd_train_nQSO_data
     train_label = rnd_train_QSO_label + rnd_train_nQSO_label
     test_data = rnd_test_QSO_data + rnd_test_nQSO_data

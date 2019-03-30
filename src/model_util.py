@@ -19,9 +19,9 @@ def load_data_set(mode, feature_mode, seed=3):
     # mode 1 - nqso是做了iband filter并附加了dr7 quasar catalog
     qso_file = './train/QSO_sample_data' + str(mode)
     nqso_file = './train/nQSO_sample_data' + str(mode)
-    QSO_data, QSO_label = load_data(qso_file, feature_mode)
+    QSO_data, QSO_label, _ = load_data(qso_file, feature_mode)
     print("total QSO: ", len(QSO_label))
-    nQSO_data, nQSO_label = load_data(nqso_file, feature_mode)
+    nQSO_data, nQSO_label, _ = load_data(nqso_file, feature_mode)
     print("total nQSO: ", len(nQSO_label))
 
     min_size = min(len(QSO_label), len(nQSO_label))
@@ -47,8 +47,8 @@ def load_data_set(mode, feature_mode, seed=3):
 
 def imbalance_data_set(mode, seed):
     # return imbalance train and test data set
-    QSO_data, QSO_label = load_data()
-    nQSO_data, nQSO_label = load_data()
+    QSO_data, QSO_label, _ = load_data()
+    nQSO_data, nQSO_label, _ = load_data()
     rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
             = rnd_sampling(QSO_data, QSO_label, 1600, 400, seed)
     rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \

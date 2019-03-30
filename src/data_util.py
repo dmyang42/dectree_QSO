@@ -12,7 +12,7 @@ import random
 from MyError import *
 
 def get_feature(mode='all'):
-    if mode is 'all':
+    if mode == 'all':
         filename = './train/raw/test_sample_data_1'
         try:
             with open(filename) as f:
@@ -66,12 +66,12 @@ def load_data(filename, mode):
     try:
         with open(filename) as f:
             lines = f.readlines()
-            data, label = [], []
+            data, label, ID = [], [], []
             feature = lines[0].split()
             feature.remove('MiQSO') # MiQSO相当于label, 从feature中移除
             for line in lines[1:]:
                 line = line.split()
-            
+                _id = line[0]
                 line = line[1:]
                 try:
                     line = list(map(eval, line))
@@ -83,6 +83,7 @@ def load_data(filename, mode):
                 except SyntaxError:
                     print("EOF line!")
                 else:
+                    ID.append(_id)
                     label.append(line.pop(7)) # MiQSO对应的为7,pop掉
                     # now line features are:
                     # ug / gr / ri / iz / gAmpl / rAmpl / iAmpl / 
@@ -100,7 +101,7 @@ def load_data(filename, mode):
                         raise InputError('No such feature mode!')
                     data.append(sample)
             label = norm_label(label)
-        return data, label
+        return data, label, ID
     except FileNotFoundError:
         # 存在部分块不存在的情况
         print("Missing part: " + filename)

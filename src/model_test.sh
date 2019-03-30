@@ -6,9 +6,10 @@
 # author: topol @ USTC
 # last modified: 2019/3/19
 #
-mode=$1
+data_mode=$1
+feature_mode=$2
 for (( integer=1; integer <= 100; integer++))
 do
     echo "running "$integer
-    python dectree.py $mode $integer > /dev/null
+    python dectree.py --data-mode=${data_mode} --feature-mode=${feature_mode} --random-seed=${integer} > /dev/null
 done

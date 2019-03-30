@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # model train module
 # author: topol @ USTC
@@ -29,10 +31,10 @@ def decision_tree(X, Y):
 def random_forest(X, Y):
     # 随机森林训练
     # 不用调参了
-    rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
-        max_features="log2", class_weight={0:1,1:6})
     # rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
-    #     max_features="log2")
+    #     max_features="log2", class_weight={0:1,1:6})
+    rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
+        max_features="log2")
     rfc.fit(X, Y)
     print("Random Forest training finished!")
     print("Random Forest oob_score: " + str(rfc.oob_score_))

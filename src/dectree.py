@@ -1,10 +1,12 @@
+# -*- coding: utf-8 -*-
+
 # 
 # the 'main' script
 # using command 'python dectree.py 1 3' to run
 # 1 represents data sets mode
 # 3 represents a random seed
 # author: topol @ USTC
-# last modified: 2019/3/22
+# last modified: 2019/3/30
 #
 from model_train import do_PCA, decision_tree, random_forest, adaptive_boost, gradient_boost
 from model_test import test_DT, test_RF, test_AB, test_GB
@@ -15,20 +17,33 @@ import sys
 import numpy as np
 # import subprocess
 import model_visualize as viz
+import argparse
 
-mode = int(sys.argv[1])
-seed = int(sys.argv[2])
+# 参数输入
+parser = argparse.ArgumentParser(description='manual to this script')
+parser.add_argument('--data-mode', type=int, default=3)
+parser.add_argument('--feature-mode', type=str, default='all')
+parser.add_argument('--random-seed', type=int, default=3)
+args = parser.parse_args()
+
+mode = args.data_mode
+feature_mode = args.feature_mode
+seed = args.random_seed
+
 # 抽样生成训练集、测试集
-# mode 0 - nqso是s82 std star的
-# mode 1 - nqso是做了iband filter并附加了dr7 quasar catalog
-train_data, train_label, test_data, test_label = load_data_set(mode, 1600, 400, seed)
+# mode 0 - nqso是s82 std star的(作废!)
+# mode 1 - nqso是做了iband filter并附加了dr7 quasar catalog(作废!)
+# mode 2 - 我们自己乱搞的(作废!)
+# mode 3 - 所有源i_band < 19.0
+# mode 4 - 光谱认证(clean)
+train_data, train_label, test_data, test_label = load_data_set(mode, feature_mode, seed)
 
-# 1 - PCA预处理 - 数据降维
+# 1 - PCA预处理 - 数据降维(作废!)
 # pca, new_data = do_PCA(train_data)
 new_data = train_data
 
 # 2 - 数据格式标准化
-feature = get_feature('./train/raw/test_sample_data_1')
+feature = get_feature(feature_mode)
 # feature = list(map(str, range(pca.n_components_)))
 X, Y, vec = std_data(new_data, train_label, feature)
 Y = Y.reshape(len(Y))
@@ -42,14 +57,14 @@ rfc = random_forest(X, Y)
 # print_feature_importance(rfc, vec.get_feature_names())
 
 # 5 - AdaBoost训练
-abc = adaptive_boost(X, Y)
+# abc = adaptive_boost(X, Y)
 # print_feature_importance(abc, vec.get_feature_names())
 
 # 6- GBDT训练
-gbc = gradient_boost(X, Y)
+# gbc = gradient_boost(X, Y)
 # print_feature_importance(gbc, vec.get_feature_names())
 
-viz.dt_viz(dtc, vec.get_feature_names())
+# viz.dt_viz(dtc, vec.get_feature_names())
 # viz.rf_viz(rfc, vec.get_feature_names())
 
 # 6 - 模型测试
@@ -58,17 +73,17 @@ new_data = test_data
 X, Y, vec = std_data(new_data, test_label, feature)
 qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT = test_DT(X, Y, dtc)
 qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF = test_RF(X, Y, rfc)
-qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB = test_AB(X, Y, abc)
-qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = test_GB(X, Y, gbc)
+# qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB = test_AB(X, Y, abc)
+# qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = test_GB(X, Y, gbc)
 
-f1 = open("score_DT_0", "a+")
-f2 = open("score_RF_0", "a+")
-f3 = open("score_AB_0", "a+")
-f4 = open("score_GB_0", "a+")
-print(qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT, file=f1)
-print(qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF, file=f2)
-print(qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB, file=f3)
-print(qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB, file=f4)
+# f1 = open("score_DT_0", "a+")
+# f2 = open("score_RF_0", "a+")
+# f3 = open("score_AB_0", "a+")
+# f4 = open("score_GB_0", "a+")
+# print(qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT, file=f1)
+# print(qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF, file=f2)
+# print(qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB, file=f3)
+# print(qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB, file=f4)
 
 # trun tree model to python function
 # ! - dtc only
@@ -78,7 +93,7 @@ print(qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_
 # joblib.dump(pca, "./model/test_pca.m")
 joblib.dump(dtc, "./model/test_dt.m")
 joblib.dump(rfc, "./model/test_rf.m")
-joblib.dump(abc, "./model/test_ab.m")
-joblib.dump(gbc, "./model/test_gbc.m")
+# joblib.dump(abc, "./model/test_ab.m")
+# joblib.dump(gbc, "./model/test_gbc.m")
 print("All model saved!")
 

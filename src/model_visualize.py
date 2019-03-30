@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # model visualize module
 # author: topol @ USTC

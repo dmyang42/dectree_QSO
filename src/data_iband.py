@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # i-band filter script:
 # since for dr7, most sources with i band < 19.0 have spectroscopic observation

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # This is the script to generate a list of spectroscopic confirmed quasars-
 # -by sdss dr7 quasar catalog: http://classic.sdss.org/dr7/products/value_added/qsocat_dr7.html

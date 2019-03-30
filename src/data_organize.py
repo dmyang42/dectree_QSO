@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # This is the script to organize test_sample_data_* file in ./train/
 # Running this script will output two files including quasar and non-quasar respectively

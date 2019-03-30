@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # run RF for imbalance data set
 # and do SMOTE to compensate this imbalance

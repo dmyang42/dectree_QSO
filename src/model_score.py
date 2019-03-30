@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # calculate average score
 # author: topol @ USTC

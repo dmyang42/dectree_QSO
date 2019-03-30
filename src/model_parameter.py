@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # grid search to find best model parameters
 # author: topol @ USTC

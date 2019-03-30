@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 # 
 # This is the script to generate a list of spectroscopic confirmed stars-
 # -by s82 standard stars catalog(Ivezic): http://faculty.washington.edu/ivezic/sdss/catalogs/stripe82.html

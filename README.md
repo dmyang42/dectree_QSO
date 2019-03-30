@@ -17,6 +17,6 @@ step4: Use `python data_organize.py 3` or `python data_organize.py 4` to organiz
 - mode 4 - all spec confirmed
 
 step4: Use `python dectree.py --data-mode=3 --feature-mode=all --random-seed=3` to train decision tree model(in python3 env)
---data-mode : 0, 1, 2, 3, 4 as in step4
---feature-mode : all for all features / color for color features only / variability for variability features only
---random-seed : int 
+- --data-mode : 0, 1, 2, 3, 4 as in step4
+- --feature-mode : all for all features / color for color features only / variability for variability features only
+- --random-seed : int 

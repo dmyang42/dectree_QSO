@@ -28,12 +28,14 @@ def decision_tree(X, Y):
     print("Decision Tree training finished!")
     return dtc
 
-def random_forest(X, Y):
+def random_forest(X, Y, bias=False, _class_weight={0:1,1:1}):
     # 随机森林训练
     # 不用调参了
-    # rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
-    #     max_features="log2", class_weight={0:1,1:6})
-    rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
+    if bias is True:
+        rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
+            max_features="log2", class_weight=_class_weight)
+    elif bias is False:
+        rfc = RandomForestClassifier(n_estimators=500, oob_score=True, criterion="gini", \
         max_features="log2")
     rfc.fit(X, Y)
     print("Random Forest training finished!")

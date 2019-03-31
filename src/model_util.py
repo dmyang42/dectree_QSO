@@ -45,14 +45,14 @@ def load_data_set(mode, feature_mode, seed=3):
     
     return train_data, train_label, test_data, test_label
 
-def imbalance_data_set(mode, seed):
+def imbalance_data_set(mode, train_ratio, test_ratio, seed):
     # return imbalance train and test data set
-    QSO_data, QSO_label, _ = load_data()
-    nQSO_data, nQSO_label, _ = load_data()
+    QSO_data, QSO_label, _ = load_data(filename='./train/QSO_sample_data3', mode='all')
+    nQSO_data, nQSO_label, _ = load_data(filename='./train/nQSO_sample_data3', mode='all')
     rnd_train_QSO_data, rnd_train_QSO_label, rnd_test_QSO_data, rnd_test_QSO_label \
             = rnd_sampling(QSO_data, QSO_label, 1600, 400, seed)
     rnd_train_nQSO_data, rnd_train_nQSO_label, rnd_test_nQSO_data, rnd_test_nQSO_label \
-            = rnd_sampling(nQSO_data, nQSO_label, 1600, 2400, seed)
+            = rnd_sampling(nQSO_data, nQSO_label, int(1600*train_ratio), int(400*test_ratio), seed)
     train_data = rnd_train_QSO_data + rnd_train_nQSO_data
     train_label = rnd_train_QSO_label + rnd_train_nQSO_label
     test_data = rnd_test_QSO_data + rnd_test_nQSO_data

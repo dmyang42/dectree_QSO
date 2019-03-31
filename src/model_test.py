@@ -30,14 +30,14 @@ def test_DT(X, Y, dtc):
     target_names = ['Not QSO', 'QSO']
     matrix = confusion_matrix(Y, Y_pred_dtc)
     print(matrix)
-    qso_precision = calculate_precision(matrix[0][0], matrix[1][0])
-    qso_recall = calculate_recall(matrix[0][0], matrix[0][1])
-    nqso_precision = calculate_precision(matrix[1][1], matrix[0][1])
-    nqso_recall = calculate_precision(matrix[1][1], matrix[1][0])
+    nqso_precision = calculate_precision(matrix[0][0], matrix[1][0])
+    nqso_recall = calculate_recall(matrix[0][0], matrix[0][1])
+    qso_precision = calculate_precision(matrix[1][1], matrix[0][1])
+    qso_recall = calculate_precision(matrix[1][1], matrix[1][0])
     print(classification_report(Y, Y_pred_dtc, target_names=target_names, digits=6))
     print("total score: ", dtc.score(X, Y))
     print("*******************************************\n")
-    return qso_precision, qso_recall, nqso_precision, nqso_recall, dtc.score(X, Y)
+    return nqso_precision, nqso_recall, qso_precision, qso_recall, dtc.score(X, Y)
 
 def test_RF(X, Y, rfc):
     # random forest test
@@ -47,14 +47,14 @@ def test_RF(X, Y, rfc):
     target_names = ['Not QSO', 'QSO']
     matrix = confusion_matrix(Y, Y_pred_rfc)
     print(matrix)
-    qso_precision = calculate_precision(matrix[0][0], matrix[1][0])
-    qso_recall = calculate_recall(matrix[0][0], matrix[0][1])
-    nqso_precision = calculate_precision(matrix[1][1], matrix[0][1])
-    nqso_recall = calculate_precision(matrix[1][1], matrix[1][0])
+    nqso_precision = calculate_precision(matrix[0][0], matrix[1][0])
+    nqso_recall = calculate_recall(matrix[0][0], matrix[0][1])
+    qso_precision = calculate_precision(matrix[1][1], matrix[0][1])
+    qso_recall = calculate_precision(matrix[1][1], matrix[1][0])
     print(classification_report(Y, Y_pred_rfc, target_names=target_names, digits=6))
     print("total score: ", rfc.score(X, Y))
     print("*******************************************\n")
-    return qso_precision, qso_recall, nqso_precision, nqso_recall, rfc.score(X, Y)
+    return nqso_precision, nqso_recall, qso_precision, qso_recall, rfc.score(X, Y)
 
 def test_AB(X, Y, abc):
     # decision tree test
@@ -64,14 +64,14 @@ def test_AB(X, Y, abc):
     target_names = ['Not QSO', 'QSO']
     matrix = confusion_matrix(Y, Y_pred_abc)
     print(matrix)
-    qso_precision = calculate_precision(matrix[0][0], matrix[1][0])
-    qso_recall = calculate_recall(matrix[0][0], matrix[0][1])
-    nqso_precision = calculate_precision(matrix[1][1], matrix[0][1])
-    nqso_recall = calculate_precision(matrix[1][1], matrix[1][0])
+    nqso_precision = calculate_precision(matrix[0][0], matrix[1][0])
+    nqso_recall = calculate_recall(matrix[0][0], matrix[0][1])
+    qso_precision = calculate_precision(matrix[1][1], matrix[0][1])
+    qso_recall = calculate_precision(matrix[1][1], matrix[1][0])
     print(classification_report(Y, Y_pred_abc, target_names=target_names, digits=6))
     print("total score: ", abc.score(X, Y))
     print("*******************************************\n")
-    return qso_precision, qso_recall, nqso_precision, nqso_recall, abc.score(X, Y)
+    return nqso_precision, nqso_recall, qso_precision, qso_recall, abc.score(X, Y)
 
 def test_GB(X, Y, gbc):
     # decision tree test
@@ -81,14 +81,14 @@ def test_GB(X, Y, gbc):
     target_names = ['Not QSO', 'QSO']
     matrix = confusion_matrix(Y, Y_pred_gbc)
     print(matrix)
-    qso_precision = calculate_precision(matrix[0][0], matrix[1][0])
-    qso_recall = calculate_recall(matrix[0][0], matrix[0][1])
-    nqso_precision = calculate_precision(matrix[1][1], matrix[0][1])
-    nqso_recall = calculate_precision(matrix[1][1], matrix[1][0])
+    nqso_precision = calculate_precision(matrix[0][0], matrix[1][0])
+    nqso_recall = calculate_recall(matrix[0][0], matrix[0][1])
+    qso_precision = calculate_precision(matrix[1][1], matrix[0][1])
+    qso_recall = calculate_precision(matrix[1][1], matrix[1][0])
     print(classification_report(Y, Y_pred_gbc, target_names=target_names, digits=6))
     print("total score: ", gbc.score(X, Y))
     print("*******************************************\n")
-    return qso_precision, qso_recall, nqso_precision, nqso_recall, gbc.score(X, Y)
+    return nqso_precision, nqso_recall, qso_precision, qso_recall, gbc.score(X, Y)
 
 def main():
     # ignore this part!

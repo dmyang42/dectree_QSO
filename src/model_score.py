@@ -18,10 +18,10 @@ with open(filename) as f:
     qso_p, qso_r, nqso_p, nqso_r, score = [], [], [], [], []
     for line in lines:
         line = line.split()
-        qso_p.append(float(line[0]))
-        qso_r.append(float(line[1]))
-        nqso_p.append(float(line[2]))
-        nqso_r.append(float(line[3]))
+        nqso_p.append(float(line[0]))
+        nqso_r.append(float(line[1]))
+        qso_p.append(float(line[2]))
+        qso_r.append(float(line[3]))
         score.append(float(line[4]))
 
 print("average score: ", sum(score)/len(score), np.std(score)/np.sqrt(len(score)))

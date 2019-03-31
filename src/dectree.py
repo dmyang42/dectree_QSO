@@ -71,8 +71,8 @@ rfc = random_forest(X, Y)
 # new_data = pca.transform(test_data)
 new_data = test_data
 X, Y, vec = std_data(new_data, test_label, feature)
-# qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT = test_DT(X, Y, dtc)
-# qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF = test_RF(X, Y, rfc)
+qso_precision_DT, qso_recall_DT, nqso_precision_DT, nqso_recall_DT, score_DT = test_DT(X, Y, dtc)
+qso_precision_RF, qso_recall_RF, nqso_precision_RF, nqso_recall_RF, score_RF = test_RF(X, Y, rfc)
 # qso_precision_AB, qso_recall_AB, nqso_precision_AB, nqso_recall_AB, score_AB = test_AB(X, Y, abc)
 # qso_precision_GB, qso_recall_GB, nqso_precision_GB, nqso_recall_GB, score_GB = test_GB(X, Y, gbc)
 

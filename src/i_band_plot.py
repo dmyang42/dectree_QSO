@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+
+# 
+# plot distribution of i band magnitude
+# author: topol @ USTC
+# last modified: 2019/3/26
+#
 from data_organize import read_ID_file
 import matplotlib.pyplot as plt
 

@@ -13,18 +13,9 @@ from MyError import *
 
 def get_feature(mode='all'):
     if mode == 'all':
-        filename = './train/raw/test_sample_data_1'
-        try:
-            with open(filename) as f:
-                lines = f.readlines()
-                feature = lines[0].split()
-                feature.remove('ID')
-                feature.remove('MiQSO') # MiQSO相当于label, 从feature中移除
-            return feature
-        except FileNotFoundError:
-            # 存在部分块不存在的情况
-            print("Missing part: " + filename)
-            return []
+        return ['ug', 'gr', 'ri', 'iz', 'gAmpl', 'rAmpl', 'iAmpl', \
+            'tau_u', 'tau_g', 'tau_r', 'tau_i', 'tau_z', 'sigma_u ', \
+                ' sigma_g ', ' sigma_r ', ' sigma_i ', ' sigma_z']
     elif mode == 'color':
         return ['ug', 'gr', 'ri', 'iz']
     elif mode == 'variability':
@@ -105,7 +96,7 @@ def load_data(filename, mode):
     except FileNotFoundError:
         # 存在部分块不存在的情况
         print("Missing part: " + filename)
-        return [], []
+        return [], [], []
 
 def rnd_sampling(data, label, train_size, test_size, seed):
     # 随机抽样产生训练集和测试集
